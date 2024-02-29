@@ -19,7 +19,7 @@ export class UserController {
     @requestBody() userDetails: Userdetails,
   ): Promise<Userdetails> {
     // Check if the email is already registered
-    const existingUser = await this.UserdetailsRepository.findOne({where: {email: userDetails.email}});
+    const existingUser = await this.UserdetailsRepository.findOne({where: {contactNo: userDetails.contactNo}});
     if (existingUser) {
       throw new HttpErrors.BadRequest('Email already registered');
     }
@@ -30,7 +30,7 @@ export class UserController {
 
   @post('/login')
   async login(
-    @requestBody() credentials: {email: string, password: string},
+    @requestBody() credentials: {contactNo: number, password: string},
   ): Promise<{token: string}> {
 
     //find existing session and return binding key
@@ -41,8 +41,8 @@ export class UserController {
     // }
 
     //if session does not exist then
-    // Find user by email
-    const user = await this.UserdetailsRepository.findOne({where: {email: credentials.email}});
+    // Find user by contactNo
+    const user = await this.UserdetailsRepository.findOne({where: {contactNo: credentials.contactNo}});
     if (!user) {
       throw new HttpErrors.Unauthorized('Invalid credentials');
     }

@@ -17,7 +17,7 @@ let UserController = class UserController {
     }
     async signup(userDetails) {
         // Check if the email is already registered
-        const existingUser = await this.UserdetailsRepository.findOne({ where: { email: userDetails.email } });
+        const existingUser = await this.UserdetailsRepository.findOne({ where: { contactNo: userDetails.contactNo } });
         if (existingUser) {
             throw new rest_1.HttpErrors.BadRequest('Email already registered');
         }
@@ -32,8 +32,8 @@ let UserController = class UserController {
         //   return{ token: storedToken};
         // }
         //if session does not exist then
-        // Find user by email
-        const user = await this.UserdetailsRepository.findOne({ where: { email: credentials.email } });
+        // Find user by contactNo
+        const user = await this.UserdetailsRepository.findOne({ where: { contactNo: credentials.contactNo } });
         if (!user) {
             throw new rest_1.HttpErrors.Unauthorized('Invalid credentials');
         }

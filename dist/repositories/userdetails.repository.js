@@ -11,9 +11,9 @@ let UserdetailsRepository = class UserdetailsRepository extends repository_1.Def
     constructor(dataSource) {
         super(models_1.Userdetails, dataSource);
     }
-    async authenticate(email, password) {
+    async authenticate(contactNo, password) {
         // Find user by email
-        const user = await this.findOne({ where: { email } });
+        const user = await this.findOne({ where: { contactNo } });
         if (!user) {
             return null; // User not found
         }
