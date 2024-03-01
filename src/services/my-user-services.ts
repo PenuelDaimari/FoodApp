@@ -2,12 +2,16 @@ import {UserService, TokenService} from '@loopback/authentication';
 import {Userdetails} from '../models';
 import {UserdetailsRepository} from '../repositories';
 import {sign, verify} from 'jsonwebtoken';
+import { UserProfile } from '@loopback/security';
 
 export class MyService implements UserService<Userdetails, Userdetails> {
   constructor(
     private userRepository: UserdetailsRepository,
     private tokenService: TokenService,
   ) {}
+  convertToUserProfile(user: Userdetails): UserProfile {
+    throw new Error('Method not implemented.');
+  }
 
 
   async generateToken(user: Userdetails): Promise<string> {

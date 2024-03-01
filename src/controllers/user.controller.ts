@@ -6,6 +6,10 @@ import {hash, compare} from 'bcrypt';
 import { sign, Secret } from 'jsonwebtoken';
 import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import { inject,Context, BindingKey } from '@loopback/core';
+import {TokenService} from '@loopback/authentication';
+import {securityId, UserProfile} from '@loopback/security';
+
+
 
 export class UserController {
   constructor(
@@ -39,6 +43,7 @@ export class UserController {
     // if(storedToken) {
     //   return{ token: storedToken};
     // }
+    
 
     //if session does not exist then
     // Find user by email

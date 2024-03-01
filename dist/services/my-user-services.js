@@ -7,6 +7,9 @@ class MyService {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
     }
+    convertToUserProfile(user) {
+        throw new Error('Method not implemented.');
+    }
     async generateToken(user) {
         // Generate JWT token for the authenticated user
         const payload = {
