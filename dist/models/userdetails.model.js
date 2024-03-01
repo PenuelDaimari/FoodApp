@@ -19,10 +19,10 @@ tslib_1.__decorate([
 ], Userdetails.prototype, "id", void 0);
 tslib_1.__decorate([
     (0, repository_1.property)({
-        type: 'number',
+        type: 'string',
         required: true,
     }),
-    tslib_1.__metadata("design:type", Number)
+    tslib_1.__metadata("design:type", String)
 ], Userdetails.prototype, "contactNo", void 0);
 tslib_1.__decorate([
     (0, repository_1.property)({

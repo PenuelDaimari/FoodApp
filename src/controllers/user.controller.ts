@@ -30,7 +30,7 @@ export class UserController {
 
   @post('/login')
   async login(
-    @requestBody() credentials: {contactNo: number, password: string},
+    @requestBody() credentials: {contactNo: string, password: string},
   ): Promise<{token: string}> {
 
     //find existing session and return binding key

@@ -15,7 +15,7 @@ export class UserdetailsRepository extends DefaultCrudRepository<
     super(Userdetails, dataSource);
   }
 
-  async authenticate(contactNo: number, password: string): Promise<Userdetails | null> {
+  async authenticate(contactNo: string, password: string): Promise<Userdetails | null> {
     // Find user by email
     const user = await this.findOne({where: {contactNo}});
     if (!user) {

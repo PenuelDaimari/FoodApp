@@ -7,7 +7,7 @@ export declare class UserController {
     constructor(UserdetailsRepository: UserdetailsRepository, ctx: Context);
     signup(userDetails: Userdetails): Promise<Userdetails>;
     login(credentials: {
-        contactNo: number;
+        contactNo: string;
         password: string;
     }): Promise<{
         token: string;

@@ -10,10 +10,10 @@ export class Userdetails extends Entity {
   id?: string;
 
   @property({
-    type: 'number',
+    type: 'string',
     required: true,
   })
-  contactNo: number;
+  contactNo: string;
 
   @property({
     type: 'string',
