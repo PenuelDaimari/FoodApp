@@ -10,10 +10,10 @@ export class Userdetails extends Entity {
   id?: string;
 
   @property({
-    type: 'string',
+    type: 'number',
     required: true,
   })
-  email: string;
+  contactNo: number;
 
   @property({
     type: 'string',
@@ -31,11 +31,6 @@ export class Userdetails extends Entity {
     type: 'string',
   })
   username?: string;
-
-  @property({
-    type: 'string',
-  })
-  hall?: string;
 
 
   constructor(data?: Partial<Userdetails>) {
