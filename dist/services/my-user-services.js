@@ -34,7 +34,7 @@ class MyService {
         // Verify user credentials (e.g., email and password)
         const user = await this.userRepository.findOne({
             where: {
-                email: credentials.email,
+                contactNo: credentials.contactNo,
                 password: credentials.password,
             },
         });

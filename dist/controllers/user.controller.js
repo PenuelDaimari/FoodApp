@@ -10,17 +10,37 @@ const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const authentication_jwt_1 = require("@loopback/authentication-jwt");
 const core_1 = require("@loopback/core");
+function isNumberLength10(input) {
+    // Check if the input is a number
+    if (!/^\d+$/.test(input)) {
+        return false;
+    }
+    // Check if the length of the number is 10
+    return input.length === 10;
+}
+function isPasswordLength8(input) {
+    // Check if the length of the password is 10
+    return input.length >= 8;
+}
 let UserController = class UserController {
     constructor(UserdetailsRepository, ctx) {
         this.UserdetailsRepository = UserdetailsRepository;
         this.ctx = ctx;
     }
     async signup(userDetails) {
+        //check if Contact_number is valid
+        if (!isNumberLength10(userDetails.contactNo)) {
+            throw new rest_1.HttpErrors.BadRequest('invalid contact number');
+        }
+        if (!isPasswordLength8(userDetails.password)) {
+            throw new rest_1.HttpErrors.BadRequest('invalid password: password length should be greater than 8 characters');
+        }
         // Check if the email is already registered
-        const existingUser = await this.UserdetailsRepository.findOne({ where: { email: userDetails.email } });
+        const existingUser = await this.UserdetailsRepository.findOne({ where: { contactNo: userDetails.contactNo } });
         if (existingUser) {
             throw new rest_1.HttpErrors.BadRequest('Email already registered');
         }
+        //check contactNo for constraints
         // Hash the password before storing it
         userDetails.password = await (0, bcrypt_1.hash)(userDetails.password, 10);
         return this.UserdetailsRepository.create(userDetails);
@@ -32,8 +52,8 @@ let UserController = class UserController {
         //   return{ token: storedToken};
         // }
         //if session does not exist then
-        // Find user by email
-        const user = await this.UserdetailsRepository.findOne({ where: { email: credentials.email } });
+        // Find user by contactNo
+        const user = await this.UserdetailsRepository.findOne({ where: { contactNo: credentials.contactNo } });
         if (!user) {
             throw new rest_1.HttpErrors.Unauthorized('Invalid credentials');
         }

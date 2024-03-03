@@ -15,9 +15,9 @@ export class UserdetailsRepository extends DefaultCrudRepository<
     super(Userdetails, dataSource);
   }
 
-  async authenticate(email: string, password: string): Promise<Userdetails | null> {
+  async authenticate(contactNo: string, password: string): Promise<Userdetails | null> {
     // Find user by email
-    const user = await this.findOne({where: {email}});
+    const user = await this.findOne({where: {contactNo}});
     if (!user) {
       return null; // User not found
     }
@@ -29,3 +29,4 @@ export class UserdetailsRepository extends DefaultCrudRepository<
     return user; // User authenticated
   }
 }
+

@@ -1,7 +1,7 @@
 {
-  "name": "foodapp",
+  "name": "FoodApp",
   "version": "0.0.1",
-  "description": "food application backend",
+  "description": "Food App",
   "keywords": [
     "loopback-application",
     "loopback"

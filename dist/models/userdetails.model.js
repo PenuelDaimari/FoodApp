@@ -23,7 +23,7 @@ tslib_1.__decorate([
         required: true,
     }),
     tslib_1.__metadata("design:type", String)
-], Userdetails.prototype, "email", void 0);
+], Userdetails.prototype, "contactNo", void 0);
 tslib_1.__decorate([
     (0, repository_1.property)({
         type: 'string',
@@ -44,12 +44,6 @@ tslib_1.__decorate([
     }),
     tslib_1.__metadata("design:type", String)
 ], Userdetails.prototype, "username", void 0);
-tslib_1.__decorate([
-    (0, repository_1.property)({
-        type: 'string',
-    }),
-    tslib_1.__metadata("design:type", String)
-], Userdetails.prototype, "hall", void 0);
 exports.Userdetails = Userdetails = tslib_1.__decorate([
     (0, repository_1.model)(),
     tslib_1.__metadata("design:paramtypes", [Object])
