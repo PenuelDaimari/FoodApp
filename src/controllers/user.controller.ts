@@ -65,7 +65,7 @@ export class UserController {
     return secret;
   }
 
-
+  // @get('/me')
 
   // @patch('/updateByEmail/{email}')
   // async updateByEmail(

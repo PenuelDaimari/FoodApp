@@ -1,6 +1,10 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model()
+@model({
+  settings: {
+    hiddenProperties: ['password'] // Remove password from response body
+  }
+})
 export class Userdetails extends Entity {
   @property({
     type: 'string',
