@@ -29,3 +29,4 @@ export class UserdetailsRepository extends DefaultCrudRepository<
     return user; // User authenticated
   }
 }
+
