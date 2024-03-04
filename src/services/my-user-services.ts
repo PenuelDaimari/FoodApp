@@ -2,7 +2,6 @@ import {UserService, TokenService} from '@loopback/authentication';
 import {Userdetails} from '../models';
 import {UserdetailsRepository} from '../repositories';
 import {sign, verify} from 'jsonwebtoken';
-import {inject} from '@loopback/core';
 import { UserProfile } from '@loopback/security';
 
 export class MyService implements UserService<Userdetails, Userdetails> {
