@@ -7,6 +7,21 @@ import { sign, Secret } from 'jsonwebtoken';
 import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import { inject,Context, BindingKey } from '@loopback/core';
 
+function isNumberLength10(input: string): boolean {
+  // Check if the input is a number
+  if (!/^\d+$/.test(input)) {
+      return false;
+  }
+
+  // Check if the length of the number is 10
+  return input.length === 10;
+}
+function isPasswordLength8(input: string): boolean {
+  // Check if the length of the password is 10
+  return input.length >= 8;
+}
+
+
 export class UserController {
   constructor(
     @repository(UserdetailsRepository)
@@ -18,15 +33,31 @@ export class UserController {
   async signup(
     @requestBody() userDetails: Userdetails,
   ): Promise<Userdetails> {
+
+    //check if Contact_number is valid
+    if(!isNumberLength10(userDetails.contactNo))
+    {
+      throw new HttpErrors.BadRequest('invalid contact number');
+    }
+    if(!isPasswordLength8(userDetails.password))
+    {
+      throw new HttpErrors.BadRequest('invalid password: password length should be greater than 8 characters');
+    }
+
     // Check if the email is already registered
     const existingUser = await this.UserdetailsRepository.findOne({where: {contactNo: userDetails.contactNo}});
     if (existingUser) {
       throw new HttpErrors.BadRequest('Email already registered');
     }
+    //check contactNo for constraints
+    
+
     // Hash the password before storing it
     userDetails.password = await hash(userDetails.password, 10);
     return this.UserdetailsRepository.create(userDetails);
   }
+
+  
 
   @post('/login')
   async login(
@@ -39,6 +70,7 @@ export class UserController {
     // if(storedToken) {
     //   return{ token: storedToken};
     // }
+    
 
     //if session does not exist then
     // Find user by contactNo
@@ -65,7 +97,7 @@ export class UserController {
     return secret;
   }
 
-
+  // @get('/me')
 
   // @patch('/updateByEmail/{email}')
   // async updateByEmail(

@@ -1,49 +1,52 @@
 import {Entity, model, property} from '@loopback/repository';
 
-@model({
-  settings: {
-    hiddenProperties: ['password'] // Remove password from response body
-  }
-})
-export class Userdetails extends Entity {
+@model()
+export class Food extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
   })
-  id?: string;
+  foodID?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  contactNo: string;
+  Name: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  password: string;
+  Hall: string;
+
+  @property({
+    type: 'number',
+    required: true,
+  })
+  Price: number;
 
   @property({
     type: 'string',
     required: true,
   })
-  name: string;
+  Description: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  username?: string;
+  image: string;
 
 
-  constructor(data?: Partial<Userdetails>) {
+  constructor(data?: Partial<Food>) {
     super(data);
   }
 }
 
-export interface UserdetailsRelations {
+export interface FoodRelations {
   // describe navigational properties here
 }
 
-export type UserdetailsWithRelations = Userdetails & UserdetailsRelations;
+export type FoodWithRelations = Food & FoodRelations;
