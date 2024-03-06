@@ -2,7 +2,7 @@ import {Entity, model, property} from '@loopback/repository';
 
 @model({
   settings: {
-    hiddenProperties: ['password'] // Remove password from response body
+    hiddenProperties: ['password','token'] // Remove password and token from response body
   }
 })
 export class Userdetails extends Entity {
@@ -36,6 +36,10 @@ export class Userdetails extends Entity {
   })
   username?: string;
 
+  @property({
+    type: 'string',
+  })
+  token?: string;
 
   constructor(data?: Partial<Userdetails>) {
     super(data);
