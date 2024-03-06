@@ -13,4 +13,8 @@ export declare class UserController {
         token: string;
     }>;
     getSecret(bindingKey: BindingKey<string>): Promise<string | undefined>;
+    getAllTokens(): Promise<{
+        token: string;
+        contactNo: string;
+    }[]>;
 }

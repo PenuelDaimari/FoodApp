@@ -3,9 +3,10 @@ import {get, post, patch, requestBody, param, HttpErrors} from '@loopback/rest';
 import {Userdetails} from '../models';
 import {UserdetailsRepository} from '../repositories';
 import {hash, compare} from 'bcrypt';
-import { sign, Secret } from 'jsonwebtoken';
+import { sign, Secret, TokenExpiredError, verify } from 'jsonwebtoken';
 import {TokenServiceBindings} from '@loopback/authentication-jwt';
 import { inject,Context, BindingKey } from '@loopback/core';
+import { decode } from 'jsonwebtoken';
 
 function isNumberLength10(input: string): boolean {
   // Check if the input is a number
@@ -47,7 +48,7 @@ export class UserController {
     // Check if the email is already registered
     const existingUser = await this.UserdetailsRepository.findOne({where: {contactNo: userDetails.contactNo}});
     if (existingUser) {
-      throw new HttpErrors.BadRequest('Email already registered');
+      throw new HttpErrors.BadRequest('Phone no. already registered');
     }
     //check contactNo for constraints
     
@@ -64,15 +65,6 @@ export class UserController {
     @requestBody() credentials: {contactNo: string, password: string},
   ): Promise<{token: string}> {
 
-    //find existing session and return binding key
-
-    // const storedToken = localStorage.getItem(credentials.email);
-    // if(storedToken) {
-    //   return{ token: storedToken};
-    // }
-    
-
-    //if session does not exist then
     // Find user by contactNo
     const user = await this.UserdetailsRepository.findOne({where: {contactNo: credentials.contactNo}});
     if (!user) {
@@ -87,6 +79,10 @@ export class UserController {
 
     const tokenSecret = await this.getSecret(TokenServiceBindings.TOKEN_SECRET); // Retrieve the secret value
     const token = sign({ userId: user.id }, tokenSecret as Secret, { expiresIn: '.5h' }); // Generate token here
+
+    //store token in usermodel
+    user.token = token;
+    await this.UserdetailsRepository.update(user);
     return { token };
   }
   async getSecret(bindingKey: BindingKey<string>): Promise<string | undefined> {
@@ -97,7 +93,26 @@ export class UserController {
     return secret;
   }
 
-  // @get('/me')
+  @get('/me')
+  async getAllTokens(): Promise<{ token: string, contactNo: string }[]> {
+    // Retrieve all user details with contactNo and token
+    const allUserDetails: Userdetails[] = await this.UserdetailsRepository.find({ fields: { contactNo: true, token: true } });
+
+    // Filter out valid tokens
+    const validTokens: { token: string, contactNo: string }[] = [];
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+    for (const Userdetails of allUserDetails) {
+      const tokenPayload: any = decode(Userdetails.token!); // Decode token payload
+
+      if (tokenPayload && tokenPayload.exp && tokenPayload.exp > currentTime) {
+        // Token has not expired
+        validTokens.push({ token: Userdetails.token!, contactNo: Userdetails.contactNo });
+      }
+    }
+
+    return validTokens;
+  }
 
   // @patch('/updateByEmail/{email}')
   // async updateByEmail(
