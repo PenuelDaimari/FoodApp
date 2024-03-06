@@ -10,6 +10,7 @@ const bcrypt_1 = require("bcrypt");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const authentication_jwt_1 = require("@loopback/authentication-jwt");
 const core_1 = require("@loopback/core");
+const jsonwebtoken_2 = require("jsonwebtoken");
 function isNumberLength10(input) {
     // Check if the input is a number
     if (!/^\d+$/.test(input)) {
@@ -46,12 +47,6 @@ let UserController = class UserController {
         return this.UserdetailsRepository.create(userDetails);
     }
     async login(credentials) {
-        //find existing session and return binding key
-        // const storedToken = localStorage.getItem(credentials.email);
-        // if(storedToken) {
-        //   return{ token: storedToken};
-        // }
-        //if session does not exist then
         // Find user by contactNo
         const user = await this.UserdetailsRepository.findOne({ where: { contactNo: credentials.contactNo } });
         if (!user) {
@@ -65,6 +60,9 @@ let UserController = class UserController {
         // Generate JWT token or return some other authentication token
         const tokenSecret = await this.getSecret(authentication_jwt_1.TokenServiceBindings.TOKEN_SECRET); // Retrieve the secret value
         const token = (0, jsonwebtoken_1.sign)({ userId: user.id }, tokenSecret, { expiresIn: '.5h' }); // Generate token here
+        //store token in usermodel
+        user.token = token;
+        await this.UserdetailsRepository.update(user);
         return { token };
     }
     async getSecret(bindingKey) {
@@ -73,6 +71,21 @@ let UserController = class UserController {
             throw new Error(`Secret not found for binding key: ${bindingKey.key}`);
         }
         return secret;
+    }
+    async getAllTokens() {
+        // Retrieve all user details with contactNo and token
+        const allUserDetails = await this.UserdetailsRepository.find({ fields: { contactNo: true, token: true } });
+        // Filter out valid tokens
+        const validTokens = [];
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+        for (const Userdetails of allUserDetails) {
+            const tokenPayload = (0, jsonwebtoken_2.decode)(Userdetails.token); // Decode token payload
+            if (tokenPayload && tokenPayload.exp && tokenPayload.exp > currentTime) {
+                // Token has not expired
+                validTokens.push({ token: Userdetails.token, contactNo: Userdetails.contactNo });
+            }
+        }
+        return validTokens;
     }
 };
 exports.UserController = UserController;
@@ -90,6 +103,12 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object]),
     tslib_1.__metadata("design:returntype", Promise)
 ], UserController.prototype, "login", null);
+tslib_1.__decorate([
+    (0, rest_1.get)('/me'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", []),
+    tslib_1.__metadata("design:returntype", Promise)
+], UserController.prototype, "getAllTokens", null);
 exports.UserController = UserController = tslib_1.__decorate([
     tslib_1.__param(0, (0, repository_1.repository)(repositories_1.UserdetailsRepository)),
     tslib_1.__param(1, core_1.inject.context()),

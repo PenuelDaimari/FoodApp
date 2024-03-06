@@ -44,10 +44,16 @@ tslib_1.__decorate([
     }),
     tslib_1.__metadata("design:type", String)
 ], Userdetails.prototype, "username", void 0);
+tslib_1.__decorate([
+    (0, repository_1.property)({
+        type: 'string',
+    }),
+    tslib_1.__metadata("design:type", String)
+], Userdetails.prototype, "token", void 0);
 exports.Userdetails = Userdetails = tslib_1.__decorate([
     (0, repository_1.model)({
         settings: {
-            hiddenProperties: ['password'] // Remove password from response body
+            hiddenProperties: ['password', 'token'] // Remove password and token from response body
         }
     }),
     tslib_1.__metadata("design:paramtypes", [Object])
